@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 const routes = [
   {
     route: "EMPANGENI",
@@ -8,7 +10,18 @@ const routes = [
     reg: "ND 45 AB ZN",
     driver: "MTHEMBU",
     status: "IYALAYISHA",
-    next: ["ND 11 CD ZN", "ND 22 EF ZN", "ND 33 GH ZN", "ND 44 JK ZN"],
+    next: [
+      "ND 11 CD ZN",
+      "ND 22 EF ZN",
+      "ND 33 GH ZN",
+      "ND 44 JK ZN",
+      "ND 55 LM ZN",
+      "ND 66 NP ZN",
+      "ND 77 QR ZN",
+      "ND 88 ST ZN",
+      "ND 99 UV ZN",
+      "ND 10 WX ZN",
+    ],
     departure: "14:20",
   },
   {
@@ -18,7 +31,18 @@ const routes = [
     reg: "NJ 22 CD ZN",
     driver: "ZULU",
     status: "AYIKAQALI UKULAYISHA",
-    next: ["NJ 10 AA ZN", "NJ 19 BB ZN", "NJ 31 CC ZN", "NJ 40 DD ZN"],
+    next: [
+      "NJ 10 AA ZN",
+      "NJ 19 BB ZN",
+      "NJ 31 CC ZN",
+      "NJ 40 DD ZN",
+      "NJ 51 EE ZN",
+      "NJ 62 FF ZN",
+      "NJ 73 GG ZN",
+      "NJ 84 HH ZN",
+      "NJ 95 II ZN",
+      "NJ 16 JJ ZN",
+    ],
     departure: "14:35",
   },
   {
@@ -28,7 +52,18 @@ const routes = [
     reg: "NU 77 EF ZN",
     driver: "NDLOVU",
     status: "IYALAYISHA",
-    next: ["NU 25 ZZ ZN", "NU 17 YY ZN", "NU 11 XX ZN", "NU 29 WW ZN"],
+    next: [
+      "NU 25 ZZ ZN",
+      "NU 17 YY ZN",
+      "NU 11 XX ZN",
+      "NU 29 WW ZN",
+      "NU 33 VV ZN",
+      "NU 44 UU ZN",
+      "NU 55 TT ZN",
+      "NU 66 SS ZN",
+      "NU 77 RR ZN",
+      "NU 88 QQ ZN",
+    ],
     departure: "14:50",
   },
   {
@@ -38,7 +73,18 @@ const routes = [
     reg: "NR 88 GH ZN",
     driver: "KHUMALO",
     status: "AYIKAQALI UKULAYISHA",
-    next: ["NR 22 AA ZN", "NR 30 BB ZN", "NR 41 CC ZN", "NR 48 DD ZN"],
+    next: [
+      "NR 22 AA ZN",
+      "NR 30 BB ZN",
+      "NR 41 CC ZN",
+      "NR 48 DD ZN",
+      "NR 55 EE ZN",
+      "NR 66 FF ZN",
+      "NR 77 GG ZN",
+      "NR 88 HH ZN",
+      "NR 99 II ZN",
+      "NR 10 JJ ZN",
+    ],
     departure: "15:05",
   },
   {
@@ -48,7 +94,18 @@ const routes = [
     reg: "NL 12 JK ZN",
     driver: "HLABISA",
     status: "IYALAYISHA",
-    next: ["NL 15 AA ZN", "NL 28 BB ZN", "NL 36 CC ZN", "NL 43 DD ZN"],
+    next: [
+      "NL 15 AA ZN",
+      "NL 28 BB ZN",
+      "NL 36 CC ZN",
+      "NL 43 DD ZN",
+      "NL 52 EE ZN",
+      "NL 61 FF ZN",
+      "NL 74 GG ZN",
+      "NL 85 HH ZN",
+      "NL 96 II ZN",
+      "NL 17 JJ ZN",
+    ],
     departure: "14:40",
   },
   {
@@ -58,15 +115,37 @@ const routes = [
     reg: "NM 33 LM ZN",
     driver: "GUMEDE",
     status: "AYIKAQALI UKULAYISHA",
-    next: ["NM 20 AA ZN", "NM 24 BB ZN", "NM 32 CC ZN", "NM 39 DD ZN"],
+    next: [
+      "NM 20 AA ZN",
+      "NM 24 BB ZN",
+      "NM 32 CC ZN",
+      "NM 39 DD ZN",
+      "NM 45 EE ZN",
+      "NM 58 FF ZN",
+      "NM 67 GG ZN",
+      "NM 78 HH ZN",
+      "NM 89 II ZN",
+      "NM 90 JJ ZN",
+    ],
     departure: "14:55",
   },
 ];
 
-// 🔥 FIX: generate consistent fake driver per reg
 const generateDriver = (reg: string) => {
-  const drivers = ["DLAMINI", "ZONDI", "MBEKE", "MNGUNI", "KHANYILE", "SIBIYA", "NDLOVU"];
-  const index = reg.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const drivers = [
+    "DLAMINI",
+    "ZONDI",
+    "MBEKE",
+    "MNGUNI",
+    "KHANYILE",
+    "SIBIYA",
+    "NDLOVU",
+  ];
+
+  const index = reg
+    .split("")
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+
   return drivers[index % drivers.length];
 };
 
@@ -82,15 +161,23 @@ const statusColor = (status: string) => {
 };
 
 export default function DisplayBoard() {
+  const [queueStart, setQueueStart] = useState(0);
+
+  // 🔁 Auto loop queue from 2 → 10 continuously
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setQueueStart((prev) => (prev >= 6 ? 0 : prev + 1));
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <main className="h-screen w-full text-white flex flex-col relative overflow-hidden">
-
-      {/* 🔴 BRAND BACKGROUND */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-950 via-black to-zinc-950 opacity-90" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.25),transparent_60%)]" />
 
       <div className="relative flex flex-col h-full">
-
         {/* HEADER */}
         <header className="h-[10vh] flex flex-col justify-center items-center border-b border-white/10 backdrop-blur-xl">
           <h1 className="text-3xl md:text-5xl font-black tracking-widest">
@@ -103,93 +190,96 @@ export default function DisplayBoard() {
 
         {/* GRID */}
         <section className="flex-1 overflow-y-auto p-3">
-          <div className="grid grid-cols-3 gap-3 auto-rows-[minmax(280px,1fr)]">
+          <div className="grid grid-cols-3 gap-3 auto-rows-[minmax(320px,1fr)]">
+            {routes.map((item, i) => {
+              const visibleQueue = item.next.slice(
+                queueStart,
+                queueStart + 4
+              );
 
-            {routes.map((item, i) => (
-              <div
-                key={i}
-                className="rounded-3xl border border-white/10 bg-black/60 backdrop-blur-xl shadow-xl overflow-hidden flex flex-col"
-              >
-
-                {/* ROUTE */}
-                <div className="p-2 text-center border-b border-white/10 bg-black/40">
-                  <h2 className="text-sm font-bold tracking-widest text-yellow-400">
-                    {item.route}
-                  </h2>
-                </div>
-
-                {/* BODY */}
-                <div className="p-3 flex-1 space-y-2">
-
-                  {/* BIG REG */}
-                  <div className="bg-gradient-to-r from-green-600/20 via-black to-green-600/20 border border-green-500/40 rounded-2xl p-4 text-center">
-                    <p className="text-xs text-zinc-400">NEXT VEHICLE</p>
-
-                    <h3 className="text-4xl md:text-5xl font-black text-green-400 tracking-widest">
-                      {item.reg}
-                    </h3>
-
-                    <p className="text-xs text-zinc-400 mt-1">
-                      DRIVER: {item.driver}
-                    </p>
+              return (
+                <div
+                  key={i}
+                  className="rounded-3xl border border-white/10 bg-black/60 backdrop-blur-xl shadow-xl overflow-hidden flex flex-col"
+                >
+                  {/* ROUTE */}
+                  <div className="p-2 text-center border-b border-white/10 bg-black/40">
+                    <h2 className="text-sm font-bold tracking-widest text-yellow-400">
+                      {item.route}
+                    </h2>
                   </div>
 
-                  {/* VEHICLE */}
-                  <div className="bg-black/30 p-2 rounded-xl text-xs border border-white/10">
-                    <p className="text-zinc-400">VEHICLE</p>
-                    <p className="font-bold">{item.vehicleName}</p>
-                  </div>
+                  {/* BODY */}
+                  <div className="p-3 flex-1 space-y-2">
+                    {/* NEXT VEHICLE */}
+                    <div className="bg-gradient-to-r from-green-600/20 via-black to-green-600/20 border border-green-500/40 rounded-2xl p-4 text-center">
+                      <p className="text-xs text-zinc-400">NEXT VEHICLE</p>
 
-                  {/* STATUS */}
-                  <div className={`text-xs p-2 rounded-xl text-center font-black ${statusColor(item.status)}`}>
-                    {item.status}
-                  </div>
+                      <h3 className="text-4xl md:text-5xl font-black text-green-400 tracking-widest">
+                        {item.reg}
+                      </h3>
 
-                  {/* 🚦 QUEUE (FIXED DRIVER PER REG) */}
-                  <div className="bg-black/40 p-3 rounded-2xl border border-white/10">
-                    <p className="text-blue-400 font-bold text-xs mb-2">
-                      QUEUE BEHIND
-                    </p>
+                      <p className="text-xs text-zinc-400 mt-1">
+                        DRIVER: {item.driver}
+                      </p>
+                    </div>
 
-                    <div className="space-y-2">
-                      {item.next.slice(0, 3).map((reg, idx) => (
-                        <div
-                          key={idx}
-                          className="flex justify-between items-center bg-black/30 p-2 rounded-xl border border-white/10"
-                        >
-                          <span className="text-sm font-bold text-zinc-400">
-                            {idx + 2}.
-                          </span>
+                    {/* VEHICLE */}
+                    <div className="bg-black/30 p-2 rounded-xl text-xs border border-white/10">
+                      <p className="text-zinc-400">VEHICLE</p>
+                      <p className="font-bold">{item.vehicleName}</p>
+                    </div>
 
-                          {/* REG */}
-                          <span className="text-lg font-black text-white tracking-wide">
-                            {reg}
-                          </span>
+                    {/* STATUS */}
+                    <div
+                      className={`text-xs p-2 rounded-xl text-center font-black ${statusColor(
+                        item.status
+                      )}`}
+                    >
+                      {item.status}
+                    </div>
 
-                          {/* FIXED: UNIQUE DRIVER PER QUEUE ITEM */}
-                          <span className="text-xs text-green-300 font-semibold">
-                            {generateDriver(reg)}
-                          </span>
-                        </div>
-                      ))}
+                    {/* 🔁 QUEUE LOOP */}
+                    <div className="bg-black/40 p-3 rounded-2xl border border-white/10">
+                      <p className="text-blue-400 font-bold text-xs mb-2">
+                        QUEUE BEHIND
+                      </p>
+
+                      <div className="space-y-2 transition-all duration-500">
+                        {visibleQueue.map((reg, idx) => (
+                          <div
+                            key={`${reg}-${idx}`}
+                            className="flex justify-between items-center bg-black/30 p-2 rounded-xl border border-white/10"
+                          >
+                            <span className="text-sm font-bold text-zinc-400">
+                              {queueStart + idx + 2}.
+                            </span>
+
+                            <span className="text-lg font-black text-white tracking-wide">
+                              {reg}
+                            </span>
+
+                            <span className="text-xs text-green-300 font-semibold">
+                              {generateDriver(reg)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
+                  {/* FOOTER */}
+                  <div className="p-2 border-t border-white/10 flex justify-between items-center bg-black/60">
+                    <span className="text-[10px] text-zinc-400">
+                      DEPARTURE
+                    </span>
+                    <span className="text-yellow-400 text-xl font-black">
+                      {item.departure}
+                    </span>
+                  </div>
                 </div>
-
-                {/* FOOTER */}
-                <div className="p-2 border-t border-white/10 flex justify-between items-center bg-black/60">
-                  <span className="text-[10px] text-zinc-400">
-                    DEPARTURE
-                  </span>
-                  <span className="text-yellow-400 text-xl font-black">
-                    {item.departure}
-                  </span>
-                </div>
-
-              </div>
-            ))}
-
+              );
+            })}
           </div>
         </section>
 
@@ -197,7 +287,6 @@ export default function DisplayBoard() {
         <footer className="h-[6vh] flex items-center justify-center text-xs text-zinc-300 border-t border-white/10 backdrop-blur-xl">
           PLEASE CHECK YOUR POSITION IN QUEUE • SYSTEM ACTIVE
         </footer>
-
       </div>
     </main>
   );
