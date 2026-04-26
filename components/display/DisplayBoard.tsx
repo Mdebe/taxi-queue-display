@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 const routes = [
   {
@@ -163,7 +164,6 @@ const statusColor = (status: string) => {
 export default function DisplayBoard() {
   const [queueStart, setQueueStart] = useState(0);
 
-  // 🔁 Auto loop queue from 2 → 10 continuously
   useEffect(() => {
     const interval = setInterval(() => {
       setQueueStart((prev) => (prev >= 6 ? 0 : prev + 1));
@@ -174,19 +174,64 @@ export default function DisplayBoard() {
 
   return (
     <main className="h-screen w-full text-white flex flex-col relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-red-950 via-black to-zinc-950 opacity-90" />
+      {/* BACKGROUND */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-950 via-black to-zinc-950 opacity-95" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.25),transparent_60%)]" />
 
       <div className="relative flex flex-col h-full">
-        {/* HEADER */}
-        <header className="h-[10vh] flex flex-col justify-center items-center border-b border-white/10 backdrop-blur-xl">
-          <h1 className="text-3xl md:text-5xl font-black tracking-widest">
-            RICHARDS BAY TAXI RANK
-          </h1>
-          <p className="text-green-400 text-lg md:text-2xl font-bold">
-            LIVE QUEUE CONTROL BOARD
-          </p>
-        </header>
+       {/* HEADER */}
+<header className="border-b border-white/10 backdrop-blur-xl bg-black/30 px-6 py-4">
+  <div className="flex items-center justify-between">
+
+    {/* LEFT - RB LOGO */}
+    <div className="flex items-center gap-4">
+      <div className="w-[400px] h-auto rounded-2xl bg-white p-3 flex items-center justify-center shadow-lg">
+        <Image
+          src="/kzn-transport-logo.png"
+          alt="Richards Bay Taxi Rank Logo"
+          width={400}
+          height={120}
+          priority
+          className="object-contain"
+        />
+      </div>
+    </div>
+
+    {/* CENTER TITLE */}
+    <div className="text-center flex flex-col items-center">
+      <h1 className="text-3xl md:text-5xl font-black tracking-widest">
+        RICHARDS BAY TAXI RANK
+      </h1>
+
+      <p className="text-green-400 text-lg md:text-2xl font-bold">
+        LIVE QUEUE CONTROL BOARD
+      </p>
+
+      <p className="text-green-400 font-black text-lg mt-2">
+        ● ONLINE
+      </p>
+
+      <p className="text-xs text-zinc-400">
+        Auto Refresh: 10 sec
+      </p>
+    </div>
+
+    {/* RIGHT - UMHLATHUZE LOGO */}
+    <div className="flex items-center justify-end">
+      <div className="w-[400px] h-auto rounded-2xl bg-white p-3 flex items-center justify-center shadow-lg">
+        <Image
+          src="/umhlathuze-logo.png"
+          alt="uMhlathuze Municipality Logo"
+          width={400}
+          height={120}
+          priority
+          className="object-contain"
+        />
+      </div>
+    </div>
+
+  </div>
+</header>
 
         {/* GRID */}
         <section className="flex-1 overflow-y-auto p-3">
@@ -202,18 +247,17 @@ export default function DisplayBoard() {
                   key={i}
                   className="rounded-3xl border border-white/10 bg-black/60 backdrop-blur-xl shadow-xl overflow-hidden flex flex-col"
                 >
-                  {/* ROUTE */}
                   <div className="p-2 text-center border-b border-white/10 bg-black/40">
                     <h2 className="text-sm font-bold tracking-widest text-yellow-400">
                       {item.route}
                     </h2>
                   </div>
 
-                  {/* BODY */}
                   <div className="p-3 flex-1 space-y-2">
-                    {/* NEXT VEHICLE */}
                     <div className="bg-gradient-to-r from-green-600/20 via-black to-green-600/20 border border-green-500/40 rounded-2xl p-4 text-center">
-                      <p className="text-xs text-zinc-400">NEXT VEHICLE</p>
+                      <p className="text-xs text-zinc-400">
+                        NEXT VEHICLE
+                      </p>
 
                       <h3 className="text-4xl md:text-5xl font-black text-green-400 tracking-widest">
                         {item.reg}
@@ -224,13 +268,11 @@ export default function DisplayBoard() {
                       </p>
                     </div>
 
-                    {/* VEHICLE */}
                     <div className="bg-black/30 p-2 rounded-xl text-xs border border-white/10">
                       <p className="text-zinc-400">VEHICLE</p>
                       <p className="font-bold">{item.vehicleName}</p>
                     </div>
 
-                    {/* STATUS */}
                     <div
                       className={`text-xs p-2 rounded-xl text-center font-black ${statusColor(
                         item.status
@@ -239,7 +281,6 @@ export default function DisplayBoard() {
                       {item.status}
                     </div>
 
-                    {/* 🔁 QUEUE LOOP */}
                     <div className="bg-black/40 p-3 rounded-2xl border border-white/10">
                       <p className="text-blue-400 font-bold text-xs mb-2">
                         QUEUE BEHIND
@@ -268,11 +309,11 @@ export default function DisplayBoard() {
                     </div>
                   </div>
 
-                  {/* FOOTER */}
                   <div className="p-2 border-t border-white/10 flex justify-between items-center bg-black/60">
                     <span className="text-[10px] text-zinc-400">
                       DEPARTURE
                     </span>
+
                     <span className="text-yellow-400 text-xl font-black">
                       {item.departure}
                     </span>
@@ -285,7 +326,8 @@ export default function DisplayBoard() {
 
         {/* FOOTER */}
         <footer className="h-[6vh] flex items-center justify-center text-xs text-zinc-300 border-t border-white/10 backdrop-blur-xl">
-          PLEASE CHECK YOUR POSITION IN QUEUE • SYSTEM ACTIVE
+          PLEASE CHECK YOUR POSITION IN QUEUE • SYSTEM ACTIVE • SMART TAXI RANK
+          MANAGEMENT
         </footer>
       </div>
     </main>
